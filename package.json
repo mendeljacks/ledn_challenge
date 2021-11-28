@@ -2,10 +2,10 @@
     "name": "ledn_take_home",
     "version": "1.0.0",
     "description": "",
-    "main": "index.js",
     "scripts": {
         "start": "node src/index.js",
-        "test": "mocha --package package.json"
+        "test": "mocha --package package.json",
+        "test-watch": "nodemon --exec npm test --signal SIGKILL --ext \"js, ts\" --watch ./"
     },
     "author": "",
     "license": "ISC",
@@ -15,7 +15,7 @@
         "joi": "^17.4.2",
         "jsonwebtoken": "^8.5.1",
         "mysql2": "^2.3.3",
-        "orma": "^1.0.40",
+        "orma": "^1.0.41",
         "serialize-error": "^9.0.0",
         "sucrase": "^3.20.3"
     },

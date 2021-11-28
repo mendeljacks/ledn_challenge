@@ -1,27 +1,27 @@
-import { createUsers } from '../createUsers'
-import { beforeEach, describe, test } from 'mocha'
 import { expect } from 'chai'
+import { beforeEach, describe, test } from 'mocha'
+import { orma_introspect, orma_mutate } from 'orma'
+import env from '../../../../env.json'
 import { initDb } from '../../../configs/migrations'
-import fs from 'fs'
+import { pool_query } from '../../../configs/mysql'
+import { createUsers } from '../createUsers'
 import users from './accounts-api.json'
-// import users from './accounts-api-large.json'
 
-beforeEach(async () => {
-    await initDb()
-})
 describe('createUsers', () => {
-    test(createUsers.name, async () => {
-        const results = await createUsers(
-            users
-                .filter(
-                    (el, i) =>
-                        !users
-                            .slice(0, i)
-                            .map(el => el.email)
-                            .includes(el.email)
-                )
-                .map(el => ({ ...el, referredBy: null }))
+    beforeEach(async () => await initDb())
+    test(orma_mutate.name, async () => {
+        const orma_schema = await orma_introspect(env.database, pool_query)
+
+        const usersDeduped = users.filter(
+            (el, i) =>
+                !users
+                    .slice(0, i)
+                    .map(el => el.email)
+                    .includes(el.email)
         )
-        expect(results[0].affectedRows).to.equal(20)
+
+        const results = await createUsers(usersDeduped, orma_schema)
+
+        expect(results.users.length).to.equal(20)
     })
 })

@@ -9,11 +9,11 @@ export const userObj = {
         .valid(...Object.keys(countryListAlpha2))
         .required(),
     email: joi.string().required().email(),
-    dob: joi.date().required(),
+    dob: joi.date().iso().required(),
     mfa: joi.string().required().valid('TOTP', 'SMS').allow(null),
-    referredBy: joi.number().positive().integer().allow(null),
-    createdAt: joi.date(),
-    updatedAt: joi.date()
+    referredBy: joi.string().email().allow(null),
+    createdAt: joi.date().iso().required(),
+    updatedAt: joi.date().iso().required()
 }
 
 export const userSchema = joi.array().items(joi.object().keys(userObj)).min(1)
