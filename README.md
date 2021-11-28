@@ -2,29 +2,29 @@
 Aight today we're gonna build a simple transaction ledger.
 
 The goal is to demonstrate a simple crud api.
-I'll be using express, node.js and mysql cause
-that's what I'm comfortable with, however the storage mechanism will be abstracted so that in future this systm can use a different database should the need arise.
+I'll be using express, node.js and mysql. 
 
 # Scope
-From the business specs, there are only two entities: accounts and transactions, which are related 1:many. 
+From the business specs, there are only two entities: accounts and transactions, which have a one to many relationship. 
 
-- Typically JWT authentication could be used, but to begin let's assume only admin users use internally so I will not be implementing roles/perms/signup/signin.
-- I will assume performance matters minimise copying and support batch queries however will not implement materialised views for the aggregations. If performance is critical additional gains can be achieved with prepared statements, pre-compiled checking functions such as ajv or even faster languages such as rust.
-
-I will achieve retrieving accounts, retrieving account balances, debiting, crediting and transfering between accounts using the following routes:
-
-1. POST /users Creates Users in batch
-
-2. Query route for get account with its balance
-3. Mutation route for Debits/Credits/Transfers
+- Typically JWT authentication could be used, but to begin let's imagine our adminswill not be needing  roles/perms/signup/signin just yet.
+- Performance will start to matter so I will batch queries and minimise copying however will not implement materialised views for the aggregated balance. Additional gains can be achieved with prepared statements, pre-compiled validation functions (ajv) or dropping down to rust.
 
 What I will include: 
-- validation to prevent user error
-- tests to prevent programmer error
-- types to make future maintainance a breeze 
+- Query users/transactions
+- Mutate users/transactions
+- Validation
+- Tests to prevent programmer error
+- Types to make future maintainance a breeze 
+- Examples (see examples.http)
 
-Extra features such as rate limits or token expiry can be added if requested.
-no env, ci/cd and hosting  
+What I will not include:
+- Rate limits
+- Jwt/bcrypt
+- Env management
+- Ci/cd
+- Logging
+- Hosting  
 
 # Getting started
 
@@ -37,3 +37,4 @@ With nodeJS installed run
 npm install
 npm start
 ```
+Try the examples in examples.http or run npm test
