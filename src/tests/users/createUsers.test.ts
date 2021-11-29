@@ -22,24 +22,56 @@ describe('createUsers', () => {
         )
 
         expect(results.users.length).to.equal(20)
-    }),
-        test('Can create a user', () => {
-            const data = {
-                $operation: 'create',
-                users: [
-                    {
-                        firstName: 'Mendel',
-                        lastName: 'Jacks',
-                        country: 'AR',
-                        email: 'mendeljack@gmail.com',
-                        dob: '1996-08-11T12:00:00Z',
-                        createdAt: '2019-08-11T12:00:00Z',
-                        updatedAt: '2019-08-11T12:00:00Z'
-                    }
-                ]
-            }
+    })
+    test('Can create a user', () => {
+        const data = {
+            $operation: 'create',
+            users: [
+                {
+                    firstName: 'Mendel',
+                    lastName: 'Jacks',
+                    country: 'AR',
+                    email: 'mendeljack@gmail.com',
+                    dob: '1996-08-11T12:00:00Z',
+                    createdAt: '2019-08-11T12:00:00Z',
+                    updatedAt: '2019-08-11T12:00:00Z'
+                }
+            ]
+        }
 
-            const errors = validate(data)
-            expect(errors.length).to.equal(0)
-        })
+        const errors = validate(data)
+        expect(errors.length).to.equal(0)
+    })
+    test('No missing props', () => {
+        const data = {
+            $operation: 'create',
+            users: [
+                {
+                    // firstName: 'Mendel',
+                    lastName: 'Jacks',
+                    country: 'AR',
+                    email: 'mendeljack@gmail.com',
+                    dob: '1996-08-11T12:00:00Z',
+                    createdAt: '2019-08-11T12:00:00Z',
+                    updatedAt: '2019-08-11T12:00:00Z'
+                }
+            ]
+        }
+
+        const errors = validate(data)
+        expect(errors.length).to.equal(2)
+    })
+    test('Can delete by email', () => {
+        const data = {
+            $operation: 'delete',
+            users: [
+                {
+                    email: 'mendeljack@gmail.com'
+                }
+            ]
+        }
+
+        const errors = validate(data)
+        expect(errors.length).to.equal(0)
+    })
 })

@@ -18,7 +18,6 @@ const usersSchema = {
         createdAt: { type: 'string', format: 'date-time' },
         updatedAt: { type: 'string', format: 'date-time' }
     },
-    required: ['firstName', 'lastName', 'country', 'email', 'dob', 'createdAt', 'updatedAt'],
     additionalProperties: false
 }
 const transactionSchema = {
@@ -30,7 +29,6 @@ const transactionSchema = {
         type: { type: 'string', enum: ['send', 'receive'] },
         createdAt: { type: 'string', format: 'date-time' }
     },
-    required: ['userId', 'amount', 'type', 'createdAt'],
     additionalProperties: false
 }
 
@@ -42,7 +40,35 @@ const schema = {
         users: { type: 'array', items: usersSchema, minItems: 1 }
     },
     additionalProperties: false,
-    required: ['$operation']
+    required: ['$operation'],
+    if: {
+        properties: { $operation: { const: 'create' } },
+        required: ['$operation']
+    },
+    then: {
+        properties: {
+            users: {
+                items: {
+                    required: [
+                        'firstName',
+                        'lastName',
+                        'country',
+                        'email',
+                        'dob',
+                        'createdAt',
+                        'updatedAt'
+                    ]
+                }
+            },
+            transactions: { items: { required: ['userId', 'amount', 'type', 'createdAt'] } }
+        }
+    },
+    else: {
+        properties: {
+            users: { items: { oneOf: [{ required: ['id'] }, { required: ['email'] }] } },
+            transactions: { items: { required: ['id'] } }
+        }
+    }
 }
 
 const compiled = ajv.compile(schema)
