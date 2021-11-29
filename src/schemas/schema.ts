@@ -47,8 +47,18 @@ const schema = {
     },
     then: {
         properties: {
-            users: {
+            transactions: {
+                type: 'array',
                 items: {
+                    ...transactionSchema,
+                    required: ['userId', 'amount', 'type', 'createdAt']
+                },
+                minItems: 1
+            },
+            users: {
+                type: 'array',
+                items: {
+                    ...usersSchema,
                     required: [
                         'firstName',
                         'lastName',
@@ -58,15 +68,30 @@ const schema = {
                         'createdAt',
                         'updatedAt'
                     ]
-                }
-            },
-            transactions: { items: { required: ['userId', 'amount', 'type', 'createdAt'] } }
+                },
+                minItems: 1
+            }
         }
     },
     else: {
         properties: {
-            users: { items: { oneOf: [{ required: ['id'] }, { required: ['email'] }] } },
-            transactions: { items: { required: ['id'] } }
+            transactions: {
+                type: 'array',
+                items: {
+                    ...transactionSchema,
+                    required: ['id']
+                },
+                minItems: 1
+            },
+
+            users: {
+                type: 'array',
+                items: {
+                    ...usersSchema,
+                    oneOf: [{ required: ['id'] }, { required: ['email'] }]
+                },
+                minItems: 1
+            }
         }
     }
 }
