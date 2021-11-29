@@ -22,8 +22,10 @@ Content-Type: application/json
         "firstName": "Mendel",
         "lastName": "Jacks",
         "country": "AR",
-        "email": "mendeljack@gmail.com",
-        "dob": "1996-08-11"
+        "email": "mendeljacks@gmail.com",
+        "dob": "1996-08-11T00:00:00Z",
+        "createdAt": "2019-08-11T00:00:00Z",
+        "updatedAt": "2019-08-11T00:00:00Z"
     }]
 }
 

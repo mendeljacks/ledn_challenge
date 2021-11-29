@@ -11,7 +11,7 @@ export const cast = body => {
         ...(el.dob && { dob: new Date(el.dob) }),
         ...(el.createdAt && { createdAt: new Date(el.createdAt) }),
         ...(el.updatedAt && { updatedAt: new Date(el.updatedAt) }),
-        resourceId: nanoid()
+        ...(body['$operation'] === 'create' && { resourceId: nanoid() })
     }))
 
     return mutation

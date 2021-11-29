@@ -25,32 +25,34 @@ export const poolQuery = async (sql_strings: string[]) => {
 
 // Orma will call this function when it has mutation queries to run in parallel
 export const poolMutate: mutate_fn = async (statements: statements) => {
-    const creates: statements = statements.filter(el => (el.operation = 'create'))
+    const creates: statements = statements.filter(el => el.operation === 'create')
+    if (creates.length > 0) {
+        const sql_strings = creates.map(el => el.command_sql)
 
-    const sql_strings = creates.map(el => el.command_sql)
+        const results = await poolQuery(sql_strings)
 
-    const results = await poolQuery(sql_strings)
+        const output = await Promise.all(
+            creates.map(async el => {
+                const column_names = el.command_json.$insert_into[1]
+                const resourceIdPosition = column_names.findIndex(el => el === 'resourceId')
+                const resourceIdsEscaped = el.command_json_escaped.$values.map(
+                    el => el[resourceIdPosition]
+                )
 
-    const output = await Promise.all(
-        creates.map(async el => {
-            const column_names = el.command_json.$insert_into[1]
-            const resourceIdPosition = column_names.findIndex(el => el === 'resourceId')
-            const resourceIdsEscaped = el.command_json_escaped.$values.map(
-                el => el[resourceIdPosition]
-            )
+                const rows = await fetchRowsByResourceId(el.entity_name, resourceIdsEscaped)
 
-            const rows = await fetchRowsByResourceId(el.entity_name, resourceIdsEscaped)
+                const pks = keyBy(el => el.resourceId)(rows)
 
-            const pks = keyBy(el => el.resourceId)(rows)
-
-            return el.paths.map((path, i) => {
-                const resourceId = el.command_json.$values[i][resourceIdPosition]
-                return { path, row: pks[resourceId] }
+                return el.paths.map((path, i) => {
+                    const resourceId = el.command_json.$values[i][resourceIdPosition]
+                    return { path, row: pks[resourceId] }
+                })
             })
-        })
-    )
+        )
 
-    return output.flat(1)
+        return output.flat(1)
+    }
+  
 }
 
 // mysql doesn't do returning * like postgres so we select the row after it's created

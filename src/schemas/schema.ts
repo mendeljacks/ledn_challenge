@@ -77,19 +77,13 @@ const schema = {
         properties: {
             transactions: {
                 type: 'array',
-                items: {
-                    ...transactionSchema,
-                    required: ['id']
-                },
+                items: { ...transactionSchema, required: ['id'] },
                 minItems: 1
             },
 
             users: {
                 type: 'array',
-                items: {
-                    ...usersSchema,
-                    oneOf: [{ required: ['id'] }, { required: ['email'] }]
-                },
+                items: { ...usersSchema, oneOf: [{ required: ['id'] }, { required: ['email'] }] },
                 minItems: 1
             }
         }
