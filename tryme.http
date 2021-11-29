@@ -1,1 +1,42 @@
-POST http://localhost:3000/
+### For use with REST Client Extension for VS Code
+
+### Delete Mendel if he exists
+POST http://localhost:3000/mutate
+Content-Type: application/json
+
+{
+  "$operation": "delete",
+  "users": [{
+        "email": "mendeljacks@gmail.com"
+    }]
+}
+
+
+### Create a user
+POST http://localhost:3000/mutate
+Content-Type: application/json
+
+{
+  "$operation": "create",
+  "users": [{
+        "firstName": "Mendel",
+        "lastName": "Jacks",
+        "country": "AR",
+        "email": "mendeljack@gmail.com",
+        "dob": "1996-08-11"
+    }]
+}
+
+# Get user by email
+# Update the user email
+# Delete the user
+
+# Create two users one with a transaction
+# Initiate transfer
+# Get the users with their balances
+
+# Credit a user and debit a user
+# View his transactions
+
+###
+POST http://localhost:3000/query

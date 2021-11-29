@@ -5,41 +5,41 @@ CREATE SCHEMA db;
 
 CREATE TABLE db.users (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    referred_by INT NULL,
+    referredBy INT NULL,
     email VARCHAR(80) NOT NULL,
-    first_name VARCHAR(45) NOT NULL,
-    last_name VARCHAR(45) NOT NULL,
+    firstName VARCHAR(45) NOT NULL,
+    lastName VARCHAR(45) NOT NULL,
     country VARCHAR(2) NOT NULL,
     dob DATE NOT NULL,
     mfa VARCHAR(45) NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
     UNIQUE INDEX id_UNIQUE (id ASC) VISIBLE,
     UNIQUE INDEX email_UNIQUE (email ASC) VISIBLE);
 
 ALTER TABLE db.users 
-    CHANGE COLUMN referred_by referred_by INT UNSIGNED NULL DEFAULT NULL ,
-    ADD INDEX fk_referred_by_idx (referred_by ASC) VISIBLE;
+    CHANGE COLUMN referredBy referredBy INT UNSIGNED NULL DEFAULT NULL ,
+    ADD INDEX fk_referred_by_idx (referredBy ASC) VISIBLE;
 
 ALTER TABLE db.users 
     ADD CONSTRAINT fk_referred_by
-    FOREIGN KEY (referred_by)
+    FOREIGN KEY (referredBy)
     REFERENCES db.users (id)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION;
 
 CREATE TABLE db.transactions (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    user_id INT UNSIGNED NULL,
+    userId INT UNSIGNED NULL,
     amount INT(12) NULL,
     type ENUM("send", "receive") NULL,
-    created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    createdAt TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
     UNIQUE INDEX id_UNIQUE (id ASC) VISIBLE,
-    INDEX fk_user_id_idx (user_id ASC) VISIBLE,
+    INDEX fk_user_id_idx (userId ASC) VISIBLE,
     CONSTRAINT fk_user_id
-    FOREIGN KEY (user_id)
+    FOREIGN KEY (userId)
     REFERENCES db.users (id)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
@@ -47,27 +47,27 @@ CREATE TABLE db.transactions (
 ALTER TABLE db.transactions 
     DROP FOREIGN KEY fk_user_id;
     ALTER TABLE db.transactions 
-    CHANGE COLUMN user_id user_id INT UNSIGNED NOT NULL ,
+    CHANGE COLUMN userId userId INT UNSIGNED NOT NULL ,
     CHANGE COLUMN type type ENUM('send', 'receive') NOT NULL ,
-    CHANGE COLUMN created_at created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ;
+    CHANGE COLUMN createdAt createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ;
     ALTER TABLE db.transactions 
     ADD CONSTRAINT fk_user_id
-    FOREIGN KEY (user_id)
+    FOREIGN KEY (userId)
     REFERENCES db.users (id);
 
     ALTER TABLE db.users 
     DROP FOREIGN KEY fk_referred_by;
     ALTER TABLE db.users 
-    CHANGE COLUMN referred_by referred_by VARCHAR(80) NULL DEFAULT NULL ,
+    CHANGE COLUMN referredBy referredBy VARCHAR(80) NULL DEFAULT NULL ,
     DROP INDEX fk_referred_by_idx ;
 
     ALTER TABLE db.users
-    ADD COLUMN resource_id VARCHAR(45) NOT NULL AFTER updated_at,
-    ADD UNIQUE INDEX resource_id_UNIQUE (resource_id ASC) VISIBLE;
+    ADD COLUMN resourceId VARCHAR(45) NOT NULL AFTER updatedAt,
+    ADD UNIQUE INDEX resourceId_UNIQUE (resourceId ASC) VISIBLE;
 
     ALTER TABLE db.transactions
-    ADD COLUMN resource_id VARCHAR(45) NOT NULL AFTER created_at,
-    ADD UNIQUE INDEX resource_id_UNIQUE (resource_id ASC) VISIBLE;
+    ADD COLUMN resourceId VARCHAR(45) NOT NULL AFTER createdAt,
+    ADD UNIQUE INDEX resourceId_UNIQUE (resourceId ASC) VISIBLE;
    
 `
 

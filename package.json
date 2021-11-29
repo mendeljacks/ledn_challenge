@@ -3,20 +3,20 @@
     "version": "1.0.0",
     "description": "",
     "scripts": {
-        "start": "node src/index.js",
+        "start": "nodemon --exec sucrase-node src/api/server.ts --signal SIGKILL --ext\"js,t\" --watch ./",
         "test": "mocha --package package.json",
         "test-watch": "nodemon --exec npm test --signal SIGKILL --ext \"js, ts\" --watch ./"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "ajv": "^8.8.2",
+        "ajv-formats": "^2.1.1",
         "cors": "^2.8.5",
         "express": "^4.17.1",
         "joi": "^17.4.2",
-        "jsonwebtoken": "^8.5.1",
         "mysql2": "^2.3.3",
         "orma": "^1.0.41",
-        "serialize-error": "^9.0.0",
         "sucrase": "^3.20.3"
     },
     "devDependencies": {

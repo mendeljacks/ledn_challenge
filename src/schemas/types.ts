@@ -1,3 +1,10 @@
+export type Transaction = {
+    userId: string
+    amount: number
+    type: 'send' | 'receive'
+    createdAt: string
+}
+
 export type User = {
     firstName: string;
     lastName: string;

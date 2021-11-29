@@ -1,4 +1,4 @@
-const { serializeError } = require('serialize-error')
+import { serializeError } from './serializeError'
 /**
  * Turns promises into express handlers
  */
