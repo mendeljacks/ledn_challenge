@@ -7,10 +7,10 @@ import { validate } from '../schemas/schema'
 export const mutateHandler = async (body, ormaSchema) => {
     // Validate the body
     const errors = validate(body)
-    if (errors.length) return Promise.reject(errors.map(err => err.message))
+    if (errors.length) return Promise.reject(errors.map(err => err))
     
-    // Cast the body
-    const mutation = cast(body)
+    // Cast the dates and add resourceIds
+    const mutation = cast(body, ormaSchema, body['$operation'] === 'create')
     
     // Perform the mutation
     const results = await orma_mutate(mutation, poolMutate, el => mysql.escape(el), ormaSchema)

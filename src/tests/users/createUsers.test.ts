@@ -23,7 +23,7 @@ describe('createUsers', () => {
 
         expect(results.users.length).to.equal(20)
     })
-    test('Can create a user', () => {
+    test('Can validate a create request', () => {
         const data = {
             $operation: 'create',
             users: [
@@ -42,7 +42,7 @@ describe('createUsers', () => {
         const errors = validate(data)
         expect(errors.length).to.equal(0)
     })
-    test('No missing props', () => {
+    test('No missing props validation', () => {
         const data = {
             $operation: 'create',
             users: [
@@ -61,12 +61,25 @@ describe('createUsers', () => {
         const errors = validate(data)
         expect(errors.length).to.equal(2)
     })
-    test('Can delete by email', () => {
+    test('Validation allows nested users', () => {
         const data = {
-            $operation: 'delete',
+            $operation: 'create',
             users: [
                 {
-                    email: 'mendeljack@gmail.com'
+                    firstName: 'Mendel',
+                    lastName: 'Jacks',
+                    country: 'AR',
+                    email: 'mendeljack@gmail.com',
+                    dob: '1996-08-11T12:00:00Z',
+                    createdAt: '2019-08-11T12:00:00Z',
+                    updatedAt: '2019-08-11T12:00:00Z',
+                    transactions: [
+                        {
+                            type: 'send',
+                            amount: -123,
+                            createdAt: '2019-08-11T12:00:00Z'
+                        }
+                    ]
                 }
             ]
         }

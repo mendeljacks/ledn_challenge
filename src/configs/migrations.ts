@@ -26,8 +26,8 @@ ALTER TABLE db.users
     ADD CONSTRAINT fk_referred_by
     FOREIGN KEY (referredBy)
     REFERENCES db.users (id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION;
+    ON DELETE CASCADE
+    ON UPDATE CASCADE;
 
 CREATE TABLE db.transactions (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -41,8 +41,8 @@ CREATE TABLE db.transactions (
     CONSTRAINT fk_user_id
     FOREIGN KEY (userId)
     REFERENCES db.users (id)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
 
 ALTER TABLE db.transactions 
     DROP FOREIGN KEY fk_user_id;
@@ -72,8 +72,6 @@ ALTER TABLE db.transactions
 `
 
 export const initDb = async () => {
-    console.time('Reset db')
     await mysql.query('DROP DATABASE if exists db')
     await mysql.query(migrations)
-    console.timeEnd('Reset db')
 }

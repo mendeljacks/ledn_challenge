@@ -1,24 +1,13 @@
 ### For use with REST Client Extension for VS Code
 
-### Delete Mendel if he exists
-POST http://localhost:3000/mutate
-Content-Type: application/json
-
-{
-  "$operation": "delete",
-  "users": [{
-        "email": "mendeljacks@gmail.com"
-    }]
-}
-
-
-### Create a user
+### In thisscenario we have Mendel and Bill
 POST http://localhost:3000/mutate
 Content-Type: application/json
 
 {
   "$operation": "create",
   "users": [{
+        "id": 85,
         "firstName": "Mendel",
         "lastName": "Jacks",
         "country": "AR",
@@ -26,19 +15,117 @@ Content-Type: application/json
         "dob": "1996-08-11T00:00:00Z",
         "createdAt": "2019-08-11T00:00:00Z",
         "updatedAt": "2019-08-11T00:00:00Z"
+    }, {
+        "id": 86,
+        "firstName": "Bill",
+        "lastName": "Gates",
+        "country": "US",
+        "email": "bill.gates@microsoft.com",
+        "dob": "1955-10-28T00:00:00Z",
+        "createdAt": "2020-08-11T00:00:00Z",
+        "updatedAt": "2020-08-11T00:00:00Z",
+        "transactions": [{
+            "id": 44,
+            "amount": 1000,
+            "type": "receive",
+            "createdAt": "2020-08-11T00:00:00Z"
+        }]
     }]
 }
 
-# Get user by email
-# Update the user email
-# Delete the user
+### Mendel moves to Canada
+POST http://localhost:3000/mutate
+Content-Type: application/json
 
-# Create two users one with a transaction
-# Initiate transfer
-# Get the users with their balances
+{
+  "$operation": "update",
+  "users": [{
+        "country": "CA",
+        "email": "mendeljacks@gmail.com"
+    }]
+}
 
-# Credit a user and debit a user
-# View his transactions
+### Bill Gates invests in Mendel's future
+POST http://localhost:3000/mutate
+Content-Type: application/json
 
-###
+{
+  "$operation": "create",
+  "transactions": [{
+      "id": 101,
+      "userId": 86,
+      "amount": -100,
+      "type": "receive",
+      "createdAt": "2020-08-11T00:00:00Z"
+  }, {
+      "id": 102,
+      "userId": 85,
+      "amount": 100,
+      "type": "receive",
+      "createdAt": "2020-08-11T00:00:00Z"
+  }]
+}
+
+
+### Bill can see his transaction history
 POST http://localhost:3000/query
+Content-Type: application/json
+
+{
+  "users": {
+    "id": true,
+    "firstName": true,
+    "email": true,
+    "country": true,
+    "transactions": {
+      "amount": true,
+      "type": true,
+      "createdAt": true
+    },
+    "$where": {
+     "$eq": ["email", "'bill.gates@microsoft.com'"]
+    }
+  }
+}
+
+### And we can verify that the balances add up
+POST http://localhost:3000/query
+Content-Type: application/json
+
+{
+  "users": {
+    "firstName": true,
+    "transactions": {
+      "balance": { "$sum": "amount" },
+      "$group_by": ["userId"]
+    },
+    "$where": {
+      "$in": ["id", [85, 86]]
+    }
+  }
+}
+
+
+### Wipe the books
+POST http://localhost:3000/mutate
+Content-Type: application/json
+
+{
+  "$operation": "delete",
+  "transactions": [{ "id": 101 }, { "id": 102 }, { "id": 44 }]
+}
+
+
+### Bye Bye Bill and Mendel
+POST http://localhost:3000/mutate
+Content-Type: application/json
+
+{
+  "$operation": "delete",
+  "users": [{
+        "email": "mendeljacks@gmail.com"
+    }, {
+        "email": "bill.gates@microsoft.com"
+    }]
+}
+

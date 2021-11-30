@@ -4,7 +4,7 @@ import { countryListAlpha2 } from '../helpers/countries'
 const ajv = new Ajv({ allErrors: true })
 addFormats(ajv)
 
-const usersSchema = {
+const user = {
     type: 'object',
     properties: {
         id: { type: 'number', minimum: 1 },
@@ -16,28 +16,38 @@ const usersSchema = {
         mfa: { type: ['string', 'null'], enum: ['TOTP', 'SMS', null] },
         referredBy: { type: ['string', 'null'], format: 'email' },
         createdAt: { type: 'string', format: 'date-time' },
-        updatedAt: { type: 'string', format: 'date-time' }
+        updatedAt: { type: 'string', format: 'date-time' },
+        transactions: { $ref: '#/$defs/transactions' }
     },
     additionalProperties: false
 }
-const transactionSchema = {
+const userArray = { type: 'array', items: user, minItems: 1 }
+
+const transaction = {
     type: 'object',
     properties: {
         id: { type: 'number', minimum: 1 },
         userId: { type: 'integer', minimum: 1 },
         amount: { type: 'number' },
         type: { type: 'string', enum: ['send', 'receive'] },
-        createdAt: { type: 'string', format: 'date-time' }
+        createdAt: { type: 'string', format: 'date-time' },
+        users: { $ref: '#/$defs/users' }
     },
     additionalProperties: false
 }
 
+const transactionArray = { type: 'array', items: transaction, minItems: 1 }
+
 const schema = {
+    $defs: {
+        users: userArray,
+        transactions: transactionArray
+    },
     type: 'object',
     properties: {
         $operation: { type: 'string', enum: ['create', 'update', 'delete'] },
-        transactions: { type: 'array', items: transactionSchema, minItems: 1 },
-        users: { type: 'array', items: usersSchema, minItems: 1 }
+        transactions: transactionArray,
+        users: userArray
     },
     additionalProperties: false,
     required: ['$operation'],
@@ -50,7 +60,7 @@ const schema = {
             transactions: {
                 type: 'array',
                 items: {
-                    ...transactionSchema,
+                    ...transaction,
                     required: ['userId', 'amount', 'type', 'createdAt']
                 },
                 minItems: 1
@@ -58,7 +68,7 @@ const schema = {
             users: {
                 type: 'array',
                 items: {
-                    ...usersSchema,
+                    ...user,
                     required: [
                         'firstName',
                         'lastName',
@@ -77,13 +87,13 @@ const schema = {
         properties: {
             transactions: {
                 type: 'array',
-                items: { ...transactionSchema, required: ['id'] },
+                items: { ...transaction, oneOf: [{ required: ['id'] }, { required: ['userId'] }] },
                 minItems: 1
             },
 
             users: {
                 type: 'array',
-                items: { ...usersSchema, oneOf: [{ required: ['id'] }, { required: ['email'] }] },
+                items: { ...user, oneOf: [{ required: ['id'] }, { required: ['email'] }] },
                 minItems: 1
             }
         }

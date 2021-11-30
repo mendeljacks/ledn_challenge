@@ -52,7 +52,22 @@ export const poolMutate: mutate_fn = async (statements: statements) => {
 
         return output.flat(1)
     }
-  
+    const updates_deletes: statements = statements.filter(
+        el => el.operation === 'update' || el.operation === 'delete'
+    )
+    if (updates_deletes.length > 0) {
+        const sql_strings = updates_deletes.map(el => el.command_sql)
+
+        const results = await poolQuery(sql_strings)
+
+        const output = updates_deletes.map(statement => {
+            const path = statement.paths[0]
+            const row = { affectedRows: results[0].affectedRows }
+            return { path, row }
+        })
+
+        return output
+    }
 }
 
 // mysql doesn't do returning * like postgres so we select the row after it's created
