@@ -15,7 +15,9 @@ export const mysql: any = mysqlPromise
     })
     .promise()
 
-// Orma needs a function that takes multiple strings and returns multiple query results
+// NOTE: The functions below will no longer be necessary with orma@1.0.48 and above
+// Stitching of ids for sequential nested creates will be handled in future versions of orma
+
 export const poolQuery = async (sql_strings: string[]) => {
     await mysql.query('use db')
     const results = await mysql.query(sql_strings.join(';')) // Faster than promise.all for many queries
@@ -23,7 +25,6 @@ export const poolQuery = async (sql_strings: string[]) => {
     return results_arr as Record<string, unknown>[][]
 }
 
-// Orma will call this function when it has mutation queries to run in parallel
 export const poolMutate: mutate_fn = async (statements: statements) => {
     const creates: statements = statements.filter(el => el.operation === 'create')
     if (creates.length > 0) {
@@ -70,8 +71,6 @@ export const poolMutate: mutate_fn = async (statements: statements) => {
     }
 }
 
-// mysql doesn't do returning * like postgres so we select the row after it's created
-// small performance hit but getting generated id is necessary for orma to do nested mutations
 const fetchRowsByResourceId = async (table_name: string, resourceIdsEscaped: string[]) => {
     const [rows] = await mysql.query(
         `SELECT *

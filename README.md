@@ -1,40 +1,47 @@
 # Overview
-Aight today we're gonna build a simple transaction ledger.
+Hi there, today we're gonna build a simple transaction ledger.
 
-The goal is to demonstrate a simple crud api.
+The goal is to demonstrate a crud api using a javascript stack.
 I'll be using express, node.js and mysql. 
 
 # Scope
-From the business specs, there are only two entities: accounts and transactions, which have a one to many relationship. 
+Business specs call for two entities: accounts and transactions, which will have a one to many relationship. 
+Our admin is very busy creating 100k+ records so we will ensure the api is buttery smooth.
 
-- Typically JWT authentication could be used, but to begin let's imagine our adminswill not be needing  roles/perms/signup/signin just yet.
-- Performance will start to matter so I will batch queries and minimise copying however will not implement materialised views for the aggregated balance. Additional gains can be achieved with prepared statements, pre-compiled validation functions (ajv) or dropping down to rust.
+I will be using my experimental orm called orma to batch queries and provide a declarative syntax for queries and mutations. 
+From my testing this is fast enough, however if speed was critical, I'd consider a materialised view instead of balance aggregation on the fly. Additional gains are possible with prepared statements, or dropping down to rust but would take more time to implement.
 
 What I will include: 
-- Query users/transactions
-- Mutate users/transactions
-- Validation
-- Tests to prevent programmer error
-- Types to make future maintainance a breeze 
-- Examples (see examples.http)
+- CRUD for users
+- CRUD for transactions
+- Aggregation query into users balances
+- Validation using ajv
+- Tests using mocha
+- Typescript types for intellisense 
+- Interactive Examples (see examples.http)
 
 What I will not include:
-- Rate limits
-- Jwt/bcrypt
-- Env management
-- Ci/cd
-- Logging
-- Hosting  
+- Rate limiting
+- Authentication jwt/bcrypt
+- Env files
+- logging   
+- ci/cd/hosting
 
 # Getting started
 
-With docker installed run
+Have a mysql on port 3306 with a password of test
 ```
 docker run -p 3306:3306 --name mydb -e MYSQL_ROOT_PASSWORD=test -d mysql:latest
 ```
-With nodeJS installed run
+
+Install dependencies
 ```
 npm install
-npm start
 ```
-Try the examples in examples.http or run npm test
+
+// Test the examples with VSCode Rest Client Extension or Postman
+npm start 
+
+// Tests (require database to be online) 
+npm test 
+```

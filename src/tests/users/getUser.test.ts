@@ -25,7 +25,6 @@ describe('Get user', () => {
             },
             ormaSchema,
             poolQuery,
-            mysql.escape
         )
         
 

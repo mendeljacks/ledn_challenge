@@ -1,3 +1,4 @@
+// This library breaks circular json dependencies and converts error types to json
 export class NonError extends Error {
 	constructor(message) {
 		super(NonError._prepareSuperMessage(message));

@@ -15,7 +15,7 @@ const start_server = async port => {
 
     app.post(
         '/query',
-        handler(async (req, res) => orma_query(req.body, ormaSchema, poolQuery, mysql.escape))
+        handler(async (req, res) => orma_query(req.body, ormaSchema, poolQuery))
     )
 
     app.post(

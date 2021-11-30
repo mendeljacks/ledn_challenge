@@ -13,9 +13,7 @@ describe('createUsers', () => {
     beforeEach(async () => await initDb())
     test(orma_mutate.name, async () => {
         const ormaSchema = await orma_introspect(env.database, poolQuery)
-
         const usersDeduped = dedup(el => el.email, users)
-
         const results = await mutateHandler(
             { $operation: 'create', users: usersDeduped },
             ormaSchema

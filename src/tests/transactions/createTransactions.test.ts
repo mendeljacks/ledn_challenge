@@ -35,7 +35,6 @@ describe('createTransactions', () => {
             },
             ormaSchema,
             poolQuery,
-            mysql.escape
         )
         const userIdByEmail = keyBy(el => el.email)(usersResponse.users)
 

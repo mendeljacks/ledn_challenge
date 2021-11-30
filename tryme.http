@@ -1,6 +1,4 @@
-### For use with REST Client Extension for VS Code
-
-### In thisscenario we have Mendel and Bill
+### In this scenario we have Mendel and Bill
 POST http://localhost:3000/mutate
 Content-Type: application/json
 
@@ -40,8 +38,8 @@ Content-Type: application/json
 {
   "$operation": "update",
   "users": [{
-        "country": "CA",
-        "email": "mendeljacks@gmail.com"
+        "email": "mendeljacks@gmail.com",
+        "country": "CA"
     }]
 }
 
@@ -55,7 +53,7 @@ Content-Type: application/json
       "id": 101,
       "userId": 86,
       "amount": -100,
-      "type": "receive",
+      "type": "send",
       "createdAt": "2020-08-11T00:00:00Z"
   }, {
       "id": 102,

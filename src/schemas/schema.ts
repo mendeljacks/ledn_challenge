@@ -1,6 +1,7 @@
 import Ajv from 'ajv'
 import addFormats from 'ajv-formats'
 import { countryListAlpha2 } from '../helpers/countries'
+
 const ajv = new Ajv({ allErrors: true })
 addFormats(ajv)
 
@@ -38,6 +39,18 @@ const transaction = {
 
 const transactionArray = { type: 'array', items: transaction, minItems: 1 }
 
+const createUserFields = [
+    'firstName',
+    'lastName',
+    'country',
+    'email',
+    'dob',
+    'createdAt',
+    'updatedAt'
+]
+
+const createTransactionFields = ['userId', 'amount', 'type', 'createdAt']
+
 const schema = {
     $defs: {
         users: userArray,
@@ -59,28 +72,10 @@ const schema = {
         properties: {
             transactions: {
                 type: 'array',
-                items: {
-                    ...transaction,
-                    required: ['userId', 'amount', 'type', 'createdAt']
-                },
+                items: { ...transaction, required: createTransactionFields },
                 minItems: 1
             },
-            users: {
-                type: 'array',
-                items: {
-                    ...user,
-                    required: [
-                        'firstName',
-                        'lastName',
-                        'country',
-                        'email',
-                        'dob',
-                        'createdAt',
-                        'updatedAt'
-                    ]
-                },
-                minItems: 1
-            }
+            users: { type: 'array', items: { ...user, required: createUserFields }, minItems: 1 }
         }
     },
     else: {
