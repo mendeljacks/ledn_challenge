@@ -34,7 +34,7 @@ describe('createTransactions', () => {
                 }
             },
             ormaSchema,
-            poolQuery,
+            poolQuery
         )
         const userIdByEmail = keyBy(el => el.email)(usersResponse.users)
 
@@ -82,5 +82,4 @@ describe('createTransactions', () => {
         const errors = validate(data)
         expect(errors.length).to.equal(0)
     })
-   
 })

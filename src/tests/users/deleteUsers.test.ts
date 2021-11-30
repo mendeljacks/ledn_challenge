@@ -17,39 +17,21 @@ describe('deleteUsers', () => {
     })
     test('Delete a user', async () => {
         const ormaSchema = await orma_introspect(env.database, poolQuery)
-        const body = {
-            $operation: 'delete',
-            users: [
-                {
-                    email: 'Cassandre10@gmail.com'
-                }
-            ]
-        }
+        const body = { $operation: 'delete', users: [{ email: 'Cassandre10@gmail.com' }] }
 
         const result = await mutateHandler(body, ormaSchema)
         expect(result.users.length).to.equal(1)
     })
     test('Can validate a delete request', () => {
-        const data = {
-            $operation: 'delete',
-            users: [
-                {
-                    email: 'mendeljack@gmail.com'
-                }
-            ]
-        }
+        const data = { $operation: 'delete', users: [{ email: 'mendeljack@gmail.com' }] }
 
         const errors = validate(data)
         expect(errors.length).to.equal(0)
     })
     test('No missing unique identifier', () => {
-        const data = {
-            $operation: 'delete',
-            users: [{ firstName: 'Mendel' }]
-        }
+        const data = { $operation: 'delete', users: [{ firstName: 'Mendel' }] }
 
         const errors = validate(data)
         expect(errors.length).to.equal(4)
     })
-  
 })

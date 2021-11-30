@@ -34,10 +34,9 @@ Have a mysql on port 3306 with a password of test
 docker run -p 3306:3306 --name mydb -e MYSQL_ROOT_PASSWORD=test -d mysql:latest
 ```
 
-Install dependencies
+Run the project locally
 ```
 npm install
-```
 
 // Test the examples with VSCode Rest Client Extension or Postman
 npm start 
